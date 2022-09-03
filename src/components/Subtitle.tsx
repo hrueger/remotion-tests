@@ -1,26 +1,33 @@
+import {interpolate} from 'remotion'
 import React from 'react';
-import {interpolate, useCurrentFrame} from 'remotion';
-import {COLOR_1, FONT_FAMILY} from './constants';
+import {spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {FONT_FAMILY} from './constants';
 
-const subtitle: React.CSSProperties = {
-	fontFamily: FONT_FAMILY,
-	fontSize: 50,
-	textAlign: 'center',
-	position: 'absolute',
-	bottom: 140,
-	width: '100%',
-};
-
-const codeStyle: React.CSSProperties = {
-	color: COLOR_1,
-};
-
-export const Subtitle: React.FC = () => {
+export const Subtitle: React.FC<{
+	text: string;
+}> = ({text}) => {
+	const videoConfig = useVideoConfig();
 	const frame = useCurrentFrame();
-	const opacity = interpolate(frame, [0, 30], [0, 1]);
+
+	const end = 90;
+	const subtitle: React.CSSProperties = {
+		fontFamily: FONT_FAMILY,
+		fontSize: 80,
+		textAlign: 'center',
+		position: 'absolute',
+		top: "70%",
+		width: '80%',
+		marginLeft: "10%",
+		opacity: frame <= 10 ? interpolate(frame, [0, 10], [0, 1], {
+			extrapolateRight: "clamp",
+		}) : interpolate(frame, [end - 5, end], [1, 0], {
+			extrapolateRight: "clamp",
+		}),
+	};
+
 	return (
-		<div style={{...subtitle, opacity}}>
-			Download &amp; Info:<br /><a href="#">https://github.com/hrueger/reWarehouse</a>
-		</div>
+		<span style={subtitle}>
+			{text}
+		</span>
 	);
 };

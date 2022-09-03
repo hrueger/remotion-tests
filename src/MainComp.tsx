@@ -1,4 +1,4 @@
-import {spring} from 'remotion';
+import {Easing, spring} from 'remotion';
 import {
 	AbsoluteFill,
 	interpolate,
@@ -6,9 +6,12 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
+import { Features } from './components/Features';
 import {Logo} from './components/Logo';
-import {Subtitle} from './components/Subtitle';
+import {Footer} from './components/Footer';
 import {Title} from './components/Title';
+import { Subtitle } from './components/Subtitle';
+import { Copyright } from './components/Copyright';
 
 export const MainComp: React.FC = () => {
 	const frame = useCurrentFrame();
@@ -31,29 +34,68 @@ export const MainComp: React.FC = () => {
 	);
 
 	// Fade out the animation at the end
-	const opacity = interpolate(
+	const fadeOutEarly = interpolate(
 		frame,
-		[durationInFrames - 25, durationInFrames - 15],
+		[durationInFrames - 110, durationInFrames - 95],
 		[1, 0],
 		{
 			extrapolateLeft: 'clamp',
 			extrapolateRight: 'clamp',
 		}
 	);
+	const fadeOutEnd = interpolate(
+		frame,
+		[durationInFrames - 35, durationInFrames - 25],
+		[1, 0],
+		{
+			extrapolateLeft: 'clamp',
+			extrapolateRight: 'clamp',
+		}
+	);
+	const moveUp = interpolate(
+		frame,
+		[durationInFrames - 95, durationInFrames - 70],
+		[0, -750],
+		{
+			extrapolateLeft: 'clamp',
+			extrapolateRight: 'clamp',
+			easing: Easing.inOut(Easing.quad),
+		}
+	);
+
+	const transformTexts = interpolate(
+		frame,
+		[25, 45],
+		[90, -30],
+		{
+			extrapolateLeft: 'clamp',
+			extrapolateRight: 'clamp',
+			easing: Easing.out(Easing.quad),
+		},
+	);
 
 	return (
 		<AbsoluteFill style={{backgroundColor: 'white'}}>
-			<AbsoluteFill style={{opacity}}>
-				<AbsoluteFill style={{ transform: `translateY(${logoTranslation}px)` }}>
+			<AbsoluteFill>
+				<AbsoluteFill style={{ transform: `translateY(${logoTranslation}px)`, opacity: fadeOutEarly }}>
 					<Sequence from={10}>
 						<Logo/>
 					</Sequence>
 				</AbsoluteFill>
-				<Sequence from={35}>
-					<Title titleText="reWarehouse" titleColor="black" />
+				<Sequence from={25} style={{ opacity: fadeOutEarly }}>
+					<AbsoluteFill style={{ transform: `translateY(${transformTexts}px)` }}>
+						<Title titleText="reWarehouse" />
+						<Subtitle text="An open-source warehouse / inventory system" />
+					</AbsoluteFill>
 				</Sequence>
-				<Sequence from={75}>
-					<Subtitle />
+				<Sequence from={125} style={{opacity: fadeOutEnd, transform: `translateY(${moveUp}px)`}}>
+					<Footer />
+				</Sequence>
+				<Copyright />
+			</AbsoluteFill>
+			<AbsoluteFill style={{opacity: fadeOutEarly}}>
+				<Sequence from={125}>
+					<Features features={["Open Source", "Simple to Use", "No hardware necessary", "Print Labels", "User-friendly Web UI", "Unlimited Products", "Unlimited Locations / Venues", "Export Tracking Sheets"]} />
 				</Sequence>
 			</AbsoluteFill>
 		</AbsoluteFill>

@@ -12,19 +12,18 @@ export const Logo: React.FC = () => {
 	const videoConfig = useVideoConfig();
 	const frame = useCurrentFrame();
 
-	const development = spring({
+	const start = 100;
+	const scale = frame < start ? spring({
+		frame,
 		config: {
-			damping: 100,
 			mass: 0.5,
 		},
 		fps: videoConfig.fps,
-		frame,
-	});
-	const scale = spring({
-		frame,
-		config: {
-			mass: 0.5,
-		},
+	}) : spring({
+		frame: frame - start,
+		from: 1,
+		to: 0.2,
+		durationInFrames: 20,
 		fps: videoConfig.fps,
 	});
 
@@ -44,13 +43,20 @@ export const Logo: React.FC = () => {
 		transform: `scale(${scale})`,
 		transformOrigin: "center",
 	};
+	const fillStyle = frame < start ? {} : {
+		transform: `translateY(${interpolate(frame, [start, start + 10], [0, -30], {
+			extrapolateRight: "clamp",
+		})}%) translateX(${interpolate(frame, [start, start + 10], [0, -35], {
+			extrapolateRight: "clamp",
+		})}%)`,
+	}
 
 	return (
 		<>
-			<AbsoluteFill style={{ }} >
+			<AbsoluteFill style={fillStyle} >
 					<Img style={bgStyle} src={staticFile("icon_bg.png")} />
 			</AbsoluteFill>
-			<AbsoluteFill style={{ }} >
+			<AbsoluteFill style={fillStyle} >
 					<Img style={fgStyle} src={staticFile("icon_fg.png")} />
 			</AbsoluteFill>
 		</>
