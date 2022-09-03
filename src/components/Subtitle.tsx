@@ -4,7 +4,7 @@ import {COLOR_1, FONT_FAMILY} from './constants';
 
 const subtitle: React.CSSProperties = {
 	fontFamily: FONT_FAMILY,
-	fontSize: 40,
+	fontSize: 50,
 	textAlign: 'center',
 	position: 'absolute',
 	bottom: 140,
@@ -20,7 +20,7 @@ export const Subtitle: React.FC = () => {
 	const opacity = interpolate(frame, [0, 30], [0, 1]);
 	return (
 		<div style={{...subtitle, opacity}}>
-			Edit <code style={codeStyle}>src/Video.tsx</code> and save to reload.
+			Download &amp; Info:<br /><a href="#">https://github.com/hrueger/reWarehouse</a>
 		</div>
 	);
 };

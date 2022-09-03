@@ -6,14 +6,11 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
-import {Logo} from './HelloWorld/Logo';
-import {Subtitle} from './HelloWorld/Subtitle';
-import {Title} from './HelloWorld/Title';
+import {Logo} from './components/Logo';
+import {Subtitle} from './components/Subtitle';
+import {Title} from './components/Title';
 
-export const HelloWorld: React.FC<{
-	titleText: string;
-	titleColor: string;
-}> = ({titleText, titleColor}) => {
+export const MainComp: React.FC = () => {
 	const frame = useCurrentFrame();
 	const {durationInFrames, fps} = useVideoConfig();
 
@@ -30,7 +27,7 @@ export const HelloWorld: React.FC<{
 	const logoTranslation = interpolate(
 		logoTranslationProgress,
 		[0, 1],
-		[0, -150]
+		[0, -200]
 	);
 
 	// Fade out the animation at the end
@@ -44,18 +41,17 @@ export const HelloWorld: React.FC<{
 		}
 	);
 
-	// A <AbsoluteFill> is just a absolutely positioned <div>!
 	return (
 		<AbsoluteFill style={{backgroundColor: 'white'}}>
 			<AbsoluteFill style={{opacity}}>
-				<AbsoluteFill style={{transform: `translateY(${logoTranslation}px)`}}>
-					<Logo />
+				<AbsoluteFill style={{ transform: `translateY(${logoTranslation}px)` }}>
+					<Sequence from={10}>
+						<Logo/>
+					</Sequence>
 				</AbsoluteFill>
-				{/* Sequences can shift the time for its children! */}
 				<Sequence from={35}>
-					<Title titleText={titleText} titleColor={titleColor} />
+					<Title titleText="reWarehouse" titleColor="black" />
 				</Sequence>
-				{/* The subtitle will only enter on the 75th frame. */}
 				<Sequence from={75}>
 					<Subtitle />
 				</Sequence>
